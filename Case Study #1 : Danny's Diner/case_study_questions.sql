@@ -50,10 +50,32 @@ group by customer_id, num_purchases
 ;
 
 -- 6. Which item was purchased first by the customer after they became a member?
-
+select customer_id, product_name as `first product purchased after becoming a member`
+from menu 
+join (select *,
+         rank() over(partition by customer_id order by order_date) as rank1 
+      from members 
+      left join sales using (customer_id) 
+      where order_date > join_date) as x 
+using (product_id)
+where rank1 = 1
+order by customer_id
+; 
 
 -- 7. Which item was purchased just before the customer became a member?
-
+select customer_id, 
+       group_concat(distinct(product_name) separator ', ') 
+         as `last product(s) purchased just before becoming a member`
+from menu 
+join (select *,
+         rank() over(partition by customer_id order by order_date desc) as rank1 
+      from members 
+      left join sales using (customer_id) 
+      where order_date < join_date ) as x
+using (product_id)
+where rank1 = 1
+group by customer_id
+;
 
 -- 8. What is the total items and amount spent for each member before they became a member?
 
