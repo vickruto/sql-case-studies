@@ -39,3 +39,49 @@ join pizza_names using (pizza_id)
 where cancellation is null
 group by pizza_name;
 
+-- 5. How many Vegetarian and Meatlovers were ordered by each customer?
+
+select customer_id, pizza_name, count(*) as `number of deliveries` 
+from customer_orders_cleaned 
+join pizza_names using (pizza_id) 
+group by customer_id, pizza_name 
+order by customer_id, pizza_name;
+
+-- 6. What was the maximum number of pizzas delivered in a single order?
+
+select max(num_pizzas) as `maximum number of pizzas delivered in a single order` 
+from (select count(*) as num_pizzas 
+      from customer_orders_cleaned 
+      group by order_id) as x
+;
+
+-- 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+with changed_deliveries as (
+	select customer_id, count(*) as `number of deliveres with changes` 
+	from customer_orders_cleaned 
+	where exclusions is not null or extras is not null
+	group by customer_id), 
+	
+      unchanged_deliveries as (
+        select customer_id, count(*) as `number of deliveres without changes` 
+	from customer_orders_cleaned 
+	where exclusions is null and extras is null
+	group by customer_id)
+
+select * 
+from changed_deliveries 
+left join unchanged_deliveries
+using (customer_id)
+union all
+select * 
+from changed_deliveries 
+right join unchanged_deliveries
+using (customer_id)
+;
+
+-- 8. How many pizzas were delivered that had both exclusions and extras?
+
+select count(*) as `orders with both extras and exclusions` 
+from customer_orders_cleaned 
+where exclusions is not null and extras is not null;
+
