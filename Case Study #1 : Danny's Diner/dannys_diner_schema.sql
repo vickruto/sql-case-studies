@@ -1,6 +1,6 @@
 -- SCHEMA SQL 
 CREATE SCHEMA dannys_diner;
-SET search_path = dannys_diner;
+USE dannys_diner;
 
 
 CREATE TABLE sales (
