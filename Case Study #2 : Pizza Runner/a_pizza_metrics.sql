@@ -92,9 +92,14 @@ using (customer_id)
 
 -- 8. How many pizzas were delivered that had both exclusions and extras?
 
-select count(*) as `orders with both extras and exclusions` 
+select count(*) as `delivered orders with both extras and exclusions` 
 from customer_orders_cleaned 
-where exclusions is not null and extras is not null;
+join runner_orders_cleaned 
+using (order_id)
+where cancellation is null 
+     and exclusions is not null 
+     and extras is not null
+;
 
 -- 9. What was the total volume of pizzas ordered for each hour of the day?
 -- As the deliveries are sparse through the hours of the day we only include the hours in which there were orders
