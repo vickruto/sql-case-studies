@@ -78,7 +78,15 @@ group by customer_id
 ;
 
 -- 8. What is the total items and amount spent for each member before they became a member?
-
+-- --- ASSUMPTION :: Query requires the total items and amount spent for members who did not become members within the data timeframe as well
+select customer_id, count(*) as `total items`, sum(price) as `total amount spent` 
+from menu 
+join (select customer_id, product_id 
+      from sales 
+      left join members using (customer_id) 
+      where order_date < join_date or join_date is null) as x 
+using(product_id) 
+group by customer_id;
 
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
