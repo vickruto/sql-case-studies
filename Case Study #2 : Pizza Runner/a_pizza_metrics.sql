@@ -41,11 +41,22 @@ group by pizza_name;
 
 -- 5. How many Vegetarian and Meatlovers were ordered by each customer?
 
-select customer_id, pizza_name, count(*) as `number of deliveries` 
-from customer_orders_cleaned 
-join pizza_names using (pizza_id) 
-group by customer_id, pizza_name 
-order by customer_id, pizza_name;
+with order_counts_table as (
+	select customer_id, pizza_name, count(*) as deliveries 
+	from customer_orders_cleaned 
+	join pizza_names using (pizza_id) 
+	group by customer_id, pizza_name ) 
+
+select * 
+from (select distinct customer_id from order_counts_table) as c
+left join (select customer_id, deliveries as `Meatlovers pizza orders` 
+      from order_counts_table 
+      where pizza_name like '%Meatlovers%') as m
+using (customer_id)
+left join (select customer_id, deliveries as `Vegetarian pizza orders` 
+      from order_counts_table 
+      where pizza_name like '%Vegetarian%') as v
+using (customer_id);
 
 -- 6. What was the maximum number of pizzas delivered in a single order?
 
