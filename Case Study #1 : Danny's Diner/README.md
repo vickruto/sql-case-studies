@@ -1,9 +1,13 @@
 <div align="center">
-<h1>Danny's Diner </h1>
+ <h1>Danny's Diner </h1>
 </div>
 
+<p align="center">
+ <img src="https://8weeksqlchallenge.com/images/case-study-designs/1.png" width="500">
+</p>
+  
 <div align="center">
-<h2>Introduction</h2>
+ <h2>Introduction</h2>
 </div>
 Danny seriously loves Japanese food so in the beginning of 2021, he decides to embark upon a risky venture and opens up a cute little restaurant that sells his 3 favourite foods: sushi, curry and ramen. Danny’s Diner is in need of your assistance to help the restaurant stay afloat - the restaurant has captured some very basic data from their few months of operation but have no idea how to use their data to help them run the business.
 
@@ -23,9 +27,11 @@ Danny has shared with you 3 key datasets for this case study:
 - `sales`  
 - `menu`  
 - `members`  
-The tables are related as follows 
-<insert erd diagram here>
-
+The tables are related as shown in the ERD diagram below :
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/50678128/239647385-b1bb336a-856f-471d-9f75-9d347dc318b0.png">
+</p>
+ 
 The `sales` table captures all `customer_id` level purchases with a corresponding `order_date` and `product_id` information for when and what menu items were ordered.
 
 | customer_id | order_date | product_id |
@@ -81,7 +87,8 @@ Each of the following case study questions can be answered using a single SQL st
 <div align="center">
 <h2>Bonus Questions</h2>
 </div>
-** Join All The Things **
+  
+**Join All The Things**  
 The following questions are related creating basic data tables that Danny and his team can use to quickly derive insights without needing to join the underlying tables using SQL.
 Recreate the following table output using the available data:
 
@@ -102,10 +109,8 @@ Recreate the following table output using the available data:
 | C           | 2021-01-01 | ramen        |    12 | N      |
 | C           | 2021-01-01 | ramen        |    12 | N      |
 | C           | 2021-01-07 | ramen        |    12 | N      |
-|-------------|------------|--------------|-------|--------|
 
-
-** Rank All The Things ** 
+**Rank All The Things**  
 Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 
 
