@@ -85,3 +85,22 @@ select count(*) as `orders with both extras and exclusions`
 from customer_orders_cleaned 
 where exclusions is not null and extras is not null;
 
+-- 9. What was the total volume of pizzas ordered for each hour of the day?
+-- As the deliveries are sparse through the hours of the day we only include the hours in which there were orders
+
+select hour as `hour of day`, count(*) as `number of deliveries` 
+from (select concat(hour(order_time),':00:00') as hour 
+      from customer_orders_cleaned) as x 
+group by hour order by hour;
+
+-- 10. What was the volume of orders for each day of the week?
+-- Just as in question 9 above, only days with orders are represented
+
+select `day of week`, count(*) as `number of deliveries`
+from(
+    select dayname(pickup_time) as `day of week` 
+    from runner_orders_cleaned 
+    where pickup_time is not null) as x
+group by `day of week`
+;
+
