@@ -26,9 +26,14 @@ where rank1 = 1
 group by customer_id
 ;
 
-
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
-
+select product_name, num_purchases 
+from menu 
+join (select product_id, count(*) as num_purchases
+      from sales
+      group by product_id
+      order by num_purchases desc limit 1) as x 
+using (product_id);
 
 -- 5. Which item was the most popular for each customer?
 
