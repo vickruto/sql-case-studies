@@ -11,9 +11,20 @@ join menu using (product_id)
 group by customer_id;
 
 -- 2. How many days has each customer visited the restaurant?
-
+select customer_id, count(distinct(order_date)) as number_of_days_visited
+from sales
+group by customer_id;
 
 -- 3. What was the first item from the menu purchased by each customer?
+select customer_id, group_concat(distinct(product_name)) as `first menu item(s) purchased`
+from
+	(select *,
+	       rank() over(partition by customer_id order by order_date asc) as rank1
+	from sales 
+	join menu using (product_id)) as x
+where rank1 = 1
+group by customer_id
+;
 
 
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
