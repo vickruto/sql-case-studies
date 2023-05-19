@@ -36,7 +36,18 @@ join (select product_id, count(*) as num_purchases
 using (product_id);
 
 -- 5. Which item was the most popular for each customer?
-
+select customer_id, 
+       group_concat(product_name separator ', ') as `most popular item(s)`, 
+       num_purchases as `number of purchases`
+from 
+(select customer_id, product_name, count(*) as num_purchases, 
+       rank() over(partition by customer_id order by count(*) desc) as rank1
+from sales 
+join menu using (product_id)
+group by customer_id, product_name) as x
+where rank1 = 1
+group by customer_id, num_purchases
+;
 
 -- 6. Which item was purchased first by the customer after they became a member?
 
