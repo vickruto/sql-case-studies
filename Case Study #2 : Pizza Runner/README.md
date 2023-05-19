@@ -2,6 +2,9 @@
  <h1>Pizza Runner </h1>
 </div>
 
+<p align="center">
+    <img src="https://8weeksqlchallenge.com/images/case-study-designs/2.png" width="400" height="400">
+</p>
 
 <div align="center">
  <h2>Introduction </h2>
@@ -16,11 +19,11 @@ Danny was scrolling through his Instagram feed when something really caught his 
 </div>
 Because Danny had a few years of experience as a data scientist - he was very aware that data collection was going to be critical for his business’ growth.
 He has prepared for us an entity relationship diagram of his database design but requires further assistance to clean his data and apply some basic calculations so he can better direct his runners and optimise Pizza Runner’s operations.
-All datasets exist within the pizza_runner database schema - be sure to include this reference within your SQL scripts as you start exploring the data and answering the case study questions.
 
-** Entity Relationship Diagram **
-
-
+The ERD of the database design created by Danny is shown below : 
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/50678128/239648877-affbebb5-544c-4cf5-b924-25ee30480299.png">
+</p>
 
 ### Table 1: `runners`
 
