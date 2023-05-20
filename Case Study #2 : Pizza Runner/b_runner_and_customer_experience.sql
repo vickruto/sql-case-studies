@@ -51,3 +51,58 @@ select num_pizzas as `number of pizzas`, avg(prep_time) as `average preparation 
 from prep_time_comparison_table
 group by num_pizzas
 ;
+
+-- 4. What was the average distance travelled for each customer?
+
+select customer_id, round(avg(distance),1) as `average distance to customer(km)` 
+from (select distinct order_id, customer_id, distance 
+      from runner_orders_cleaned 
+      join customer_orders_cleaned using (order_id) 
+      where distance is not null) as x
+group by customer_id;
+
+-- 5. What was the difference between the longest and shortest delivery times for all orders?
+
+with delivery_times as (
+     select timestampdiff(minute, order_time, pickup_time) as delivery_time 
+     from customer_orders_cleaned 
+     join (select order_id, pickup_time from runner_orders_cleaned where pickup_time is not null) as x using(order_id))
+     
+select max(a.delivery_time - b.delivery_time) as `difference between the longest and shortest delivery times (mins)`
+from delivery_times a
+join delivery_times b 
+;
+
+-- 6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
+
+select runner_id, 
+       round(distance/duration*60,2) as `speed(km/h)`, 
+       rank() over(partition by runner_id order by pickup_time) - 1 as `how many deliveries to date?` 
+from runner_orders_cleaned 
+where cancellation is null 
+order by runner_id, pickup_time
+;
+-- There is a general upward trend of the delivery speeds with increasing number of deliveries ie the more pizzas a runner delivered the faster the consequent deliveries
+
+
+-- 7. What is the successful delivery percentage for each runner?
+
+select *, concat(round(successful_deliveries/total_deliveries*100,1), '% ') as `percentage successful deliveries` 
+from 
+    (select runner_id, count(*) as successful_deliveries 
+    from runner_orders_cleaned 
+    where cancellation is null 
+    group by runner_id) as x
+join 
+   (select runner_id, count(*) as total_deliveries 
+   from runner_orders_cleaned 
+   group by runner_id) as y
+using (runner_id)
+;
+
+
+
+
+
+
+
