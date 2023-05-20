@@ -63,15 +63,7 @@ group by customer_id;
 
 -- 5. What was the difference between the longest and shortest delivery times for all orders?
 
-with delivery_times as (
-     select timestampdiff(minute, order_time, pickup_time) as delivery_time 
-     from customer_orders_cleaned 
-     join (select order_id, pickup_time from runner_orders_cleaned where pickup_time is not null) as x using(order_id))
-     
-select max(a.delivery_time - b.delivery_time) as `difference between the longest and shortest delivery times (mins)`
-from delivery_times a
-join delivery_times b 
-;
+select max(duration)-min(duration) as `difference between shortest and longest delivery times (mins)` from runner_orders_cleaned;
 
 -- 6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
 
