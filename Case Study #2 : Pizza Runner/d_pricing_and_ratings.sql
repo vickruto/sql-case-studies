@@ -33,3 +33,26 @@ where cancellation is null
 group by pizza_name) as x
 ;
 
+-- 2. What if there was an additional $1 charge for any pizza extras?
+--    - Add cheese is $1 extra
+
+with prices_table as ( 
+	select pizza_name, exclusions, extras,
+	       case when pizza_name like '%meatlovers%' then 12 when pizza_name like '%vegetarian%' then 10 end as base_cost,
+	       case when extras is null then 0
+		    else char_length(extras) - char_length(replace(extras,',','')) + 1 
+		end as num_extras
+	from customer_orders_cleaned 
+	join runner_orders_cleaned using (order_id) 
+	join pizza_names using (pizza_id) 
+	where cancellation is null),
+	
+     adjusted_prices_table as (
+       select pizza_name, base_cost, num_extras, base_cost+num_extras*1 as adjusted_price
+       from prices_table
+     )
+
+select sum(adjusted_price) as `total profit with new pricing model ($)`
+from adjusted_prices_table
+;
+
