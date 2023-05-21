@@ -35,7 +35,7 @@ select topping_name as `most commonly added extra`
 from(
 	select topping_name, count(*) as counts
 	from 
-	   (select extras from customer_orders_cleaned except select NULL) as x
+	   (select extras from customer_orders_cleaned where extras is not NULL) as x
 	    join pizza_toppings
 	    where extras rlike concat('(.+ |^)',topping_id,'(,+|$)') 
 	    group by topping_name) as y
@@ -48,7 +48,7 @@ select topping_name as `most common exclusion`
 from(
 	select topping_name, count(*) as counts
 	from 
-	   (select exclusions from customer_orders_cleaned except select NULL) as x
+	   (select exclusions from customer_orders_cleaned where exclusions is not NULL) as x
 	    join pizza_toppings
 	    where exclusions rlike concat('(.+ |^)',topping_id,'(,+|$)') 
 	    group by topping_name) as y
