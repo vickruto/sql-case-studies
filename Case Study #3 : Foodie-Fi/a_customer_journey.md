@@ -40,3 +40,14 @@ where customer_id in (1,2,11,13,15,16,18,19);
 |          19 | pro monthly   | 2020-06-29 |                  7 |
 |          19 | pro annual    | 2020-08-29 |                 61 |
 
+
+### **Customer Journey Descriptions**
+| customer_id | Foodie-Fi Journey |
+|---------------|-----------|
+| 1 | The customer signed up on 1st of August 2020 and downgraded to a basic monthly plan during the trial period and continued with the basic monthly plan until the end of recorded the data window.  |
+| 2 | The customer started the trial plan on 20th of September 2020 and upgraded to a pro annual plan during trial period and continued with the plan until the end of the data window.  |
+| 11 | The customer signed up on 19th of November 2020 and unfortunately canceled their subscription before the end of the trial period |
+| 13 | The customer signed up on 15th of December 2020 and downgraded to a basic monthly plan during the trial period. On the 29th of March 2021, the customer upgraded to a pro monthly plan |
+| 16 | The customer signed up to Foodie-Fi on May, 31st 2020 and downgraded to a basic monthly plan during before the end of the trial period. After 4 months and a few days, the customer upgraded to a pro annual plan which continued to the end of the recorded data window. |
+| 18 | The customer signed up to Foodie-Fi on 6th of July 2020 and continued with the default pro monthly plan at the end of their trial plan |
+| 19 | The customer signed up on 22nd June 2020 and continued with the default pro monthly plan at the end of the trial plan. Two months later on 29th of August, the customer upgraded to a pro annual plan   |
