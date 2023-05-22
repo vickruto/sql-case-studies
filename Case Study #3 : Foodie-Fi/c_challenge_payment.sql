@@ -55,16 +55,20 @@ with recursive cte1 as (
 	from plans p join plans p2 where p.plan_id<>4 and p2.plan_id<>0 and p.plan_id>p2.plan_id
 	union 
 	select *, 'None' as ongoing_plan from plans 
-	where plan_id in (1,2,3))
+	where plan_id in (1,2,3)),
 
-select customer_id, 
-       plan_id, 
-       plan_name, 
-       payment_date, 
-       amount, 
-       rank() over(partition by customer_id order by payment_date) as payment_order
-from payments_table2
-join plan_payments using (plan_id, ongoing_plan)
-where customer_id in (1, 2, 13, 15, 16, 18, 19)
-order by customer_id, payment_date;
+   challenge_payment_table as (
+	select customer_id, 
+	       plan_id, 
+	       plan_name, 
+	       payment_date, 
+	       amount, 
+	       rank() over(partition by customer_id order by payment_date) as payment_order
+	from payments_table2
+	join plan_payments using (plan_id, ongoing_plan)
+	order by customer_id, payment_date)
+
+-- display payment samples from a few customers
+select * from challenge_payment_table
+where customer_id in (1, 2, 13, 15, 16, 18, 19);
 
