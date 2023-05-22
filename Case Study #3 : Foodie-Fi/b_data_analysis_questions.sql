@@ -140,12 +140,31 @@ from end_2020_active_subscriptions_breakdown
 
 -- 8. How many customers have upgraded to an annual plan in 2020?
 
+select count(distinct customer_id) `Number of customers who upgraded to pro annual in 2020`
+from subscriptions 
+where plan_id = 3 and start_date < '2021-01-01';
 
 -- 9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
 
+select round(avg(timestampdiff(day, s.start_date, s2.start_date)),0) as `average number of days taken to get an annual plan after joining` 
+from subscriptions s
+join subscriptions s2
+using (customer_id)
+where s.plan_id=0 and s2.plan_id=3;
 
 -- 10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
 
+select period, count(*) as `number of customer subscriptions`
+from 
+(select *, concat(floor(days/30.001)*30+1, '-', ceil(days/30.001)*30, ' days') as period
+from
+(select s.customer_id, timestampdiff(day, s.start_date, s2.start_date) as days
+from subscriptions s
+join subscriptions s2
+using (customer_id)
+where s.plan_id=0 and s2.plan_id=3) as x) as y
+group by period
+;
 
 -- 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
 
