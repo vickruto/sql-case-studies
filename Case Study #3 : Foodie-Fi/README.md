@@ -1,16 +1,29 @@
-# **Case Study #3 : Foodie-Fi**
-## **Introduction**
+<div align="center">
+ <h1>Case Study #3 : Foodie-Fi</h1>
+  <h2>Introduction</h2>
+</div>
+
+<p align="center">
+    <img src="https://8weeksqlchallenge.com/images/case-study-designs/3.png", height=400>
+</p>
+
 Subscription based businesses are super popular and Danny realised that there was a large gap in the market - he wanted to create a new streaming service that only had food related content - something like Netflix but with only cooking shows!  
 Danny finds a few smart friends to launch his new startup Foodie-Fi in 2020 and started selling monthly and annual subscriptions, giving their customers unlimited on-demand access to exclusive food videos from around the world!  
 Danny created Foodie-Fi with a data driven mindset and wanted to ensure all future investment decisions and new features were decided using data. This case study focuses on using subscription style digital data to answer important business questions.  
 
-## **Available Data**
+<div align="center">
+  <h2>Available Data</h2>
+</div>
 Danny has shared the data design for Foodie-Fi and also short descriptions on each of the database tables - our case study focuses on only 2 tables but there will be a challenge to create a new table for the Foodie-Fi team. 
-All datasets exist within the `foodie_fi` database schema - be sure to include this reference within your SQL scripts as you start exploring the data and answering the case study questions.
+All datasets exist within the `foodie_fi` database schema - be sure to include this reference within your SQL scripts as you start exploring the data and answering the case study questions.   
+
 
 The data is stored in tables which are related as shown in the Entity Relationship Diagram below :
-<Insert image here>
- 
+<p align="center">
+    <img src="https://8weeksqlchallenge.com/images/case-study-3-erd.png">
+</p>
+
+
 **Table 1: plans**
 
 Customers can choose which plans to join Foodie-Fi when they first sign up.
@@ -58,14 +71,18 @@ When customers churn - they will keep their access until the end of their curren
 | 19          | 2       | 2020-06-29 |
 | 19          | 3       | 2020-08-29 |
 
-## **Case Study Questions**
+<div align="center">
+  <h2>Case Study Questions</h2>
+</div>
 This case study is split into an initial data understanding question before diving straight into data analysis questions before finishing with 1 single extension challenge.
 
 **A. Customer Journey**
+ 
 Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
 Try to keep it as short as possible - you may also want to run some sort of join to make your explanations a bit easier!
 
 **B. Data Analysis Questions**
+ 
 1. How many customers has Foodie-Fi ever had?  
 2. What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value  
 3. What plan start_date values occur after the year 2020 for our dataset? Show the breakdown by count of events for each plan_name  
@@ -79,6 +96,7 @@ Try to keep it as short as possible - you may also want to run some sort of join
 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?  
 
 **C. Challenge Payment Question**
+ 
 The Foodie-Fi team wants you to create a new payments table for the year 2020 that includes amounts paid by each customer in the subscriptions table with the following requirements:
  - monthly payments always occur on the same day of month as the original start_date of any monthly paid plan 
  - upgrades from basic to monthly or pro plans are reduced by the current paid amount in that month and start immediately
@@ -116,6 +134,7 @@ Example outputs for this table might look like the following :
 
 
 **D. Outside The Box Questions**
+ 
 The following are open ended questions which might be asked during a technical interview for this case study - there are no right or wrong answers, but answers that make sense from both a technical and a business perspective make an amazing impression!
 1. How would you calculate the rate of growth for Foodie-Fi?
 2. What key metrics would you recommend Foodie-Fi management to track over time to assess performance of their overall business?
