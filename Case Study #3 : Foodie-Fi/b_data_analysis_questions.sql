@@ -76,6 +76,67 @@ from x join y
 
 -- 6. What is the number and percentage of customer plans after their initial free trial?
 
+with customer_plans_after_trial as (
+	select customer_id, plan_id, start_date
+	from (select *, rank() over(partition by customer_id order by start_date) as rank1 
+	      from subscriptions) as x
+	where rank1=2 ),
+	
+     plans_after_trial_breakdown as (
+	select plan_name, count(plan_name) as num_subscriptions
+	from customer_plans_after_trial 
+	join plans using (plan_id)
+	group by plan_name ),
+	
+     x (count_subscriptions_after_trial) as (
+	select sum(num_subscriptions) from plans_after_trial_breakdown)
+select plan_name as `plan`,
+       num_subscriptions as `number of subscriptions following trial`,
+       concat(round(num_subscriptions/count_subscriptions_after_trial*100,1), '% ') as `percentage `
+from plans_after_trial_breakdown
+join x
+;
+
+-- 7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31 ?
+
+with enhanced_subs as (
+	select *,
+	       lag(plan_id, 1, NULL) over(partition by customer_id) as prev_plan, 
+	       lag(start_date, 1, NULL) over(partition by customer_id) as prev_plan_start,
+	       case when plan_id=0 then 'WEEK' 
+	            when plan_id in (1,2) then 'MONTH' 
+	            when plan_id=3 then 'YEAR' 
+	            else NULL end as time_unit
+	from subscriptions join plans using (plan_id)),
+
+    subscriptions_actual_start_date as (
+	select customer_id, plan_name, plan_id, start_date,
+	       case when plan_id = 0 or (plan_id <> 4 and plan_id > prev_plan) then start_date -- upgrading or new customer
+		    when (plan_id in (1,4) and prev_plan = 2) or (plan_id=4 and prev_plan=1) -- downgrading a monthly subscription (2->1, 2->4 or 1->4)
+		       then date_add(prev_plan_start, interval (timestampdiff(month, prev_plan_start, start_date)+1) month)
+		    when plan_id in (1,2,4) and prev_plan = 3 -- downgrading an annual plan (3->2, 3->1 or 3->4)
+		       then date_add(prev_plan_start, interval (timestampdiff(year, prev_plan_start, start_date)+1) year)
+		    when plan_id=4 and prev_plan=0 -- churning out after trial (0->4)
+		       then date_add(prev_plan_start, interval timestampdiff(week, prev_plan_start, start_date) week)
+		    end as actual_start_date
+	from enhanced_subs),
+	
+    end_2020_subscriptions as (
+	select *,
+	       dense_rank() over(partition by customer_id order by actual_start_date desc) as rnk
+	from
+	(select * from subscriptions_actual_start_date where actual_start_date <= '2020-12-31') as x),
+	
+    end_2020_active_subscriptions_breakdown as (
+	select plan_name, count(*) as active_subscriptions
+	from end_2020_subscriptions
+	where rnk =1 
+	group by plan_name)
+
+select *, 
+     concat(round(active_subscriptions/(select sum(active_subscriptions) from end_2020_active_subscriptions_breakdown)*100,2), '%') as percentage
+from end_2020_active_subscriptions_breakdown
+;
 
 -- 8. How many customers have upgraded to an annual plan in 2020?
 
@@ -89,6 +150,4 @@ from x join y
 -- 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
 
 
-
--- 7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31 ?
 
