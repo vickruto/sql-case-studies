@@ -20,6 +20,8 @@ Ensure all null string values with an "unknown" string value in the original seg
 - Generate a new avg_transaction column as the sales value divided by transactions rounded to 2 decimal places for each record
 */
 
+drop table if exists clean_weekly_sales;
+create table clean_weekly_sales as
 select week_date,
        -- add week_number : 
        ceil(dayofyear(week_date)/7) as week_number, 
