@@ -53,3 +53,19 @@ from
 		-- substring(segment,1,1) as segment_demographic
 	from weekly_sales) as first_level_cleansing;
 
+-- inspect the data formats
+describe clean_weekly_sales;
+
+-- inspect some of the new columns ::
+select week_date, 
+       week_number,
+       month_number,
+       calendar_year,
+       segment,
+       age_band,
+       demographic,
+       avg_transaction
+from clean_weekly_sales
+order by week_date
+limit 10;
+
