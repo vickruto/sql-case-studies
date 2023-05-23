@@ -1,5 +1,10 @@
 <div align="center">
  <h1>Case Study #5 : Data Mart</h1>
+</div>
+
+<insert image here>
+
+<div align="center">
  <h2>Introduction</h2>
 </div>
 
@@ -15,6 +20,8 @@ The key business question he wants you to help him answer are the following:
  <h2>Available Data</h2>
 </div>
 For this case study there is only a single table: `data_mart.weekly_sales`.
+
+<insert erd here>
 
 **Column Dictionary**  
 The columns are pretty self-explanatory based on the column names but here are some further details about the dataset:
@@ -53,6 +60,7 @@ In a single query, perform the following operations and generate a new table in 
 - Add a `month_number` with the calendar month for each `week_date` value as the 3rd column
 - Add a `calendar_year` column as the 4th column containing either 2018, 2019 or 2020 values
 - Add a new column called `age_band` after the original `segment` column using the following mapping on the number inside the `segment` value
+
 |segment |  age_band  |
 |--------|------------|
 |1       |Young Adults|
@@ -60,6 +68,7 @@ In a single query, perform the following operations and generate a new table in 
 |3 or 4  |Retirees    |
 
 - Add a new `demographic` column using the following mapping for the first letter in the `segment` values:
+
 |segment | demographic |
 |--------|-------------|
 |   C    |Couples      |
