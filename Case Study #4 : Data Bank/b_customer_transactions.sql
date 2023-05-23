@@ -32,6 +32,31 @@ from (select customer_id,
 -- 3. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?
 
 
+with monthly_deposit_counts_table as (
+	select customer_id, 
+	       month(txn_date) as month_,
+	       monthname(txn_date) as monthname_, 
+	       count(*) as num_deposits
+	from customer_transactions
+	where txn_type='deposit'
+	group by customer_id, monthname(txn_date), month(txn_date)),
+
+     monthly_purchases_and_withdrawals_counts_table as (
+	select customer_id, 
+	       month(txn_date) as month_,
+	       monthname(txn_date) as monthname_, 
+	       count(*) as num_purchases_and_withdrawals
+	from customer_transactions
+	where txn_type <> 'deposit'
+	group by customer_id, monthname(txn_date), month(txn_date))
+	
+select d.monthname_, count(distinct d.customer_id) as `Number of customers` -- with more than 1 deposit and either 1 purchase or 1 withdrawal`
+from monthly_deposit_counts_table d
+join monthly_purchases_and_withdrawals_counts_table pw
+using (customer_id, month_, monthname_)
+where d.num_deposits>1 and pw.num_purchases_and_withdrawals>1
+group by d.monthname_, d.month_
+order by d.month_;
 
 -- 4. What is the closing balance for each customer at the end of the month?
 
