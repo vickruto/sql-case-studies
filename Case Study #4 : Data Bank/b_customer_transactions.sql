@@ -60,7 +60,33 @@ order by d.month_;
 
 -- 4. What is the closing balance for each customer at the end of the month?
 
+with monthly_transactions_skeleton as (
+        select * 
+        from (select distinct month(txn_date) as txn_month, monthname(txn_date) as txn_monthname
+              from customer_transactions) x 
+       join (select distinct customer_id 
+             from customer_transactions) y 
+             ),
+     
+     monthly_transactions as (
+        select customer_id,
+               month(txn_date) as txn_month, 
+               sum(case when txn_type='deposit' then txn_amount else -txn_amount end) as monthly_addition 
+        from customer_transactions 
+        group by customer_id, txn_month),
 
+     monthly_closing_balances as (
+	select customer_id, 
+	       txn_monthname as month, 
+	       sum(coalesce(monthly_addition, 0)) over(partition by customer_id order by txn_month rows unbounded preceding) as `closing balance`
+	from monthly_transactions_skeleton
+	left join monthly_transactions 
+	  using(txn_month, customer_id)
+	order by customer_id, txn_month)
+
+select * 
+from monthly_closing_balances
+limit 20;
 
 -- 5. What is the percentage of customers who increase their closing balance by more than 5%?
 
