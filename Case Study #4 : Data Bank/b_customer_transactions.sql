@@ -89,6 +89,39 @@ from monthly_closing_balances
 limit 20;
 
 -- 5. What is the percentage of customers who increase their closing balance by more than 5%?
+-- We consider all customers who closed any one of the months with a balance greater than the previous' month closing by more than 5% 
 
+with monthly_transactions_skeleton as (
+        select * 
+        from (select distinct month(txn_date) as txn_month, monthname(txn_date) as txn_monthname
+              from customer_transactions) x 
+       join (select distinct customer_id 
+             from customer_transactions) y 
+             ),
+     
+     monthly_transactions as (
+        select customer_id,
+               month(txn_date) as txn_month, 
+               sum(case when txn_type='deposit' then txn_amount else -txn_amount end) as monthly_addition 
+        from customer_transactions 
+        group by customer_id, txn_month),
 
+     monthly_closing_balances as (
+	select customer_id, 
+	       txn_monthname as month, 
+	       sum(coalesce(monthly_addition, 0)) over(partition by customer_id order by txn_month rows unbounded preceding) as closing_balance
+	from monthly_transactions_skeleton
+	left join monthly_transactions 
+	  using(txn_month, customer_id)
+	order by customer_id, txn_month),
+
+    monthly_closing_balances_with_percentage_change as (
+	select *, closing_balance/lag(closing_balance) over(partition by customer_id)*100-100 as percentage_change
+	from monthly_closing_balances)
+
+select concat(count(distinct customer_id)/(select count(distinct customer_id) from customer_transactions)*100, '%')
+       as `Percentage of customers who increased their monthly closing balance by > 5% atleast once`
+from monthly_closing_balances_with_percentage_change
+where percentage_change>5 and closing_balance>0
+limit 40;
 
