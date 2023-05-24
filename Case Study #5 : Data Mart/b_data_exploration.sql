@@ -22,14 +22,24 @@ select distinct week_number from clean_weekly_sales order by week_number
 
 -- 3. How many total transactions were there for each year in the dataset?
 
-
+select calendar_year, count(*) as `number of transactions` 
+from clean_weekly_sales 
+group by calendar_year;
 
 -- 4. What is the total sales for each region for each month?
 
-
+select month_number, 
+       region, 
+       count(*) as `number of transactions` 
+from clean_weekly_sales 
+group by month_number, region 
+order by region, month_number;
 
 -- 5. What is the total count of transactions for each platform
 
+select platform, 
+       count(*) as `number of transactions` 
+from clean_weekly_sales group by platform;
 
 -- 6. What is the percentage of sales for Retail vs Shopify for each month?
 
