@@ -11,9 +11,14 @@
 9. Can we use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify? If not - how would you calculate it instead?
 */
 
+use data_mart;
+
 -- 2. Data Exploration
 -- 1. What day of the week is used for each week_date value?
+-- :: the data consists of aggregated slices of the underlying sales data rolled up into a common day of the week which represents the start of the sales week.
 
+select distinct dayname(week_date) as `start day of the sales week`
+from clean_weekly_sales;
 
 -- 2. What range of week numbers are missing from the dataset?
 
@@ -43,7 +48,31 @@ from clean_weekly_sales group by platform;
 
 -- 6. What is the percentage of sales for Retail vs Shopify for each month?
 
+with total_monthly_sales as (
+	select month_number, count(*) as total_transactions 
+	from clean_weekly_sales 
+	group by month_number), 
+	
+     monthly_retail_sales as (
+	select month_number, count(*) as retail_transactions 
+	from clean_weekly_sales 
+	where platform like '%Retail%'
+	group by month_number),
 
+     monthly_shopify_sales as (
+	select month_number, count(*) as shopify_transactions 
+	from clean_weekly_sales 
+	where platform like '%Shopify%'
+	group by month_number)
+
+
+select month_number as month,
+       concat(round(retail_transactions/total_transactions*100,2), '%') as `Retail transactions`,
+       concat(round(shopify_transactions/total_transactions*100,2), '%') as `Shopify transactions`
+from total_monthly_sales
+join monthly_retail_sales using (month_number)
+join monthly_shopify_sales using (month_number)
+order by month_number;
 
 -- 7. What is the percentage of sales by demographic for each year in the dataset?
 
