@@ -76,14 +76,75 @@ order by month_number;
 
 -- 7. What is the percentage of sales by demographic for each year in the dataset?
 
+with total_annual_sales as (
+	select calendar_year, count(*) as total_sales
+	from clean_weekly_sales 
+	group by calendar_year), 
+	
+     couples_annual_sales as (
+	select calendar_year, count(*) as couples_sales 
+	from clean_weekly_sales 
+	where demographic like '%Couples%'
+	group by calendar_year),
 
+     families_annual_sales as (
+	select calendar_year, count(*) as families_sales 
+	from clean_weekly_sales 
+	where demographic like '%Families%'
+	group by calendar_year),
+	
+     unknown_demographic_annual_sales as (
+	select calendar_year, count(*) as unknown_sales 
+	from clean_weekly_sales 
+	where demographic is null
+	group by calendar_year)
+	
+select calendar_year as Year,
+       concat(round(couples_sales/total_sales*100,2), '%') as `Couples Sales`,
+       concat(round(families_sales/total_sales*100,2), '%') as `Families Sales`,
+       concat(round(unknown_sales/total_sales*100,2), '%') as `Unknown demographic Sales`
+from total_annual_sales
+join couples_annual_sales using (calendar_year)
+join families_annual_sales using (calendar_year)
+join unknown_demographic_annual_sales using (calendar_year)
+order by calendar_year;
 
 -- 8. Which age_band and demographic values contribute the most to Retail sales?
 
+select * 
+from 
+	(select demographic 
+	from clean_weekly_sales 
+	where platform like '%Retail%' 
+	group by demographic 
+	order by count(*) desc limit 1) as d
+join 
+	(select age_band 
+	from clean_weekly_sales 
+	where platform like '%Retail%' 
+	group by age_band 
+	order by count(*) desc limit 1) as a
 
 
 -- 9. Can we use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify? If not - how would you calculate it instead?
+-- it is possible to use the avg_transaction column to calculate the annual transaction size for each year by using the transactions column for weighting the average.
 
+with annual_avg_retail_transaction_size as (
+	select calendar_year, sum(transactions*avg_transaction)/sum(transactions) as  avg_retail_transaction_size
+	from clean_weekly_sales
+	where platform like '%Retail%' 
+	group by calendar_year),
 
-
+     annual_avg_shopify_transaction_size as (
+	select calendar_year, sum(transactions*avg_transaction)/sum(transactions) as  avg_shopify_transaction_size
+	from clean_weekly_sales
+	where platform like '%Shopify%' 
+	group by calendar_year)
+select calendar_year as Year,
+       avg_retail_transaction_size as `Avg Retail transaction size`,
+       avg_shopify_transaction_size as `Avg Shopify transaction size`
+from annual_avg_retail_transaction_size
+join annual_avg_shopify_transaction_size
+using (calendar_year)
+;
 
