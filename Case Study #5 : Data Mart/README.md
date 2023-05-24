@@ -2,8 +2,10 @@
  <h1>Case Study #5 : Data Mart</h1>
 </div>
 
-<insert image here>
-
+<p align='center'>
+   <img src='https://8weeksqlchallenge.com/images/case-study-designs/5.png', height='400'>
+</p>
+  
 <div align="center">
  <h2>Introduction</h2>
 </div>
@@ -21,7 +23,9 @@ The key business question he wants you to help him answer are the following:
 </div>
 For this case study there is only a single table: `data_mart.weekly_sales`.
 
-<insert erd here>
+<p align='center'>
+   <img src='https://8weeksqlchallenge.com/images/case-study-5-erd.png', height='400'>
+</p>
 
 **Column Dictionary**  
 The columns are pretty self-explanatory based on the column names but here are some further details about the dataset:
