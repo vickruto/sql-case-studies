@@ -75,12 +75,12 @@ select demographic,
 from (
 	select demographic, sum(sales) as 12_week_before_sales
 	from clean_weekly_sales
-	where timestampdiff(week, week_date, @baseline_week) between 1 and 12
+	where timestampdiff(week, week_date, @baseline_week_date) between 1 and 12
 	group by demographic) as b
 join (
 	select demographic, sum(sales) as 12_week_after_sales
 	from clean_weekly_sales
-	where timestampdiff(week, week_date, @baseline_week) between -11 and 0
+	where timestampdiff(week, week_date, @baseline_week_date) between -11 and 0
 	group by demographic) as a
 using (demographic) ;
 
@@ -93,12 +93,12 @@ select customer_type,
 from (
 	select customer_type, sum(sales) as 12_week_before_sales
 	from clean_weekly_sales
-	where timestampdiff(week, week_date, @baseline_week) between 1 and 12
+	where timestampdiff(week, week_date, @baseline_week_date) between 1 and 12
 	group by customer_type) as b
 join (
 	select customer_type, sum(sales) as 12_week_after_sales
 	from clean_weekly_sales
-	where timestampdiff(week, week_date, @baseline_week) between -11 and 0
+	where timestampdiff(week, week_date, @baseline_week_date) between -11 and 0
 	group by customer_type) as a
 using (customer_type) ;
 
