@@ -53,7 +53,7 @@ with joined_tables as (
         select page_id, visit_id, event_type, page_name, event_name from events join page_hierarchy using (page_id) join event_identifier using (event_type)), 
         
       x as (
-         select count(distinct visit_id) as num_checkout_events from joined_tables where event_name like '%Purchase%'), 
+         select count(distinct visit_id) as num_checkout_events from joined_tables where page_name like '%Checkout%'), 
          
       y as (
          select count(distinct visit_id) as num_purchase_events_without_checkout from joined_tables 
