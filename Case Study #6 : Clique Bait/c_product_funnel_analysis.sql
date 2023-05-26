@@ -23,6 +23,44 @@ Using a single SQL query - create a new output table which has the following det
  - How many times was each product purchased?
 */
 
+drop table if exists individual_products_statistics_table;
+create table individual_products_statistics_table as 
+with joined_tables as (
+	select visit_id, sequence_number, page_name as product, event_name 
+	from events 
+	join page_hierarchy using (page_id) 
+	join event_identifier using (event_type)),
+
+     num_views_ as (
+	select product, count(*) as views
+	from joined_tables 
+	where event_name like '%Page View%'
+	group by product), 
+
+     cart_adds_ as (
+	select product, count(*) as cart_adds
+	from joined_tables 
+	where event_name like '%Cart%'
+	group by product),
+
+     purchases_ as (
+	select product, count(*) as purchases
+	from joined_tables 
+	where event_name like '%Cart%' and visit_id in (select visit_id from joined_tables where event_name like '%Purchase%')
+	group by product),
+
+     abandonments_ as (
+	select product, count(*) as abandonments
+	from joined_tables 
+	where event_name like '%Cart%' and visit_id not in (select visit_id from joined_tables where event_name like '%Purchase%')
+	group by product)
+
+select *
+from num_views_ 
+join cart_adds_ using (product)
+join purchases_ using (product)
+join abandonments_ using (product);
+
 
 
 -- Use your 2 new output tables - answer the following questions:
