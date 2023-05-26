@@ -36,3 +36,7 @@ TABLE events {
   event_time TIMESTAMP
 }
 
+Ref: users.cookie_id < events.cookie_id 
+Ref: event_identifier.event_type < events.event_type 
+Ref: page_hierarchy.page_id < events.page_id 
+
