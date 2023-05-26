@@ -47,3 +47,42 @@ from (
 	where event_name like '%Purchase%') a
 join (  select count(distinct visit_id) as total_unique_events from events) b;
 
+-- 6. What is the percentage of visits which view the checkout page but do not have a purchase event?
+
+
+
+-- 7. What are the top 3 pages by number of views?
+
+select page_name 
+from page_hierarchy 
+join (select page_id, count(*) as num_views from events group by page_id ) as x 
+using (page_id)
+order by num_views desc 
+limit 3;
+
+-- 8. What is the number of views and cart adds for each product category?
+
+with joined_tables as (
+	select visit_id, sequence_number, product_category, event_name 
+	from events 
+	join page_hierarchy using (page_id) 
+	join event_identifier using (event_type) 
+	where product_category is not null),
+
+     num_views as (	
+	select product_category, count(*) as `Page Views`
+	from joined_tables 
+	where event_name like '%Page View%'
+	group by product_category), 
+
+     cart_adds as (	
+	select product_category, count(*) as `Cart Adds`
+	from joined_tables 
+	where event_name like '%Cart%'
+	group by product_category)
+
+select *
+from num_views
+join cart_adds
+using (product_category);
+
