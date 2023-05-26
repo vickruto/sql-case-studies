@@ -2,7 +2,9 @@
  <h1> Case Study #6 - Clique Bait </h1>
 </div>
 
-<insert image here>
+<p align="center">
+    <img src="https://8weeksqlchallenge.com/images/case-study-designs/6.png" width='400'>
+</p>
 
 <div align = 'center'>
  <h2> Introduction </h2>
