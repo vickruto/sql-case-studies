@@ -34,6 +34,6 @@ select user_id,
 from events e
 join users using (cookie_id) 
 join event_identifier using (event_type)
-join campaign_identifier ci on e.event_time between ci.start_date and ci.end_date
+left join campaign_identifier ci on e.event_time between ci.start_date and ci.end_date
 group by visit_id, user_id, campaign_name;
 
