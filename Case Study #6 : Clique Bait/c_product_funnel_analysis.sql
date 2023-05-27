@@ -123,13 +123,19 @@ limit 1;
 
 -- 3. Which product had the highest view to purchase percentage?
 
-
+select product, 
+       concat(round(purchases/views*100,2), '%') as `purchase to view percentage` 
+from individual_products_statistics_table 
+order by purchase_to_view_percentage desc 
+limit 1;
 
 -- 4. What is the average conversion rate from view to cart add?
 
-
+select avg(views/cart_adds) as `average view to cart add conversion rate` 
+from individual_products_statistics_table;
 
 -- 5. What is the average conversion rate from cart add to purchase?
 
-
+select avg(cart_adds/purchases) as `average cart add to purchase conversion rate` 
+from individual_products_statistics_table;
 
