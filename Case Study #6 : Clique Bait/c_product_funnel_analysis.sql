@@ -131,11 +131,11 @@ limit 1;
 
 -- 4. What is the average conversion rate from view to cart add?
 
-select avg(views/cart_adds) as `average view to cart add conversion rate` 
+select concat(round(avg(cart_adds/views)*100, 2), '%') as `average view to cart add conversion rate` 
 from individual_products_statistics_table;
 
 -- 5. What is the average conversion rate from cart add to purchase?
 
-select avg(cart_adds/purchases) as `average cart add to purchase conversion rate` 
+select concat(round(avg(purchases/cart_adds)*100, 2), '%') as `average cart add to purchase conversion rate` 
 from individual_products_statistics_table;
 
