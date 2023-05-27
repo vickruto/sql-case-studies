@@ -1,4 +1,4 @@
-DROP DATABASE balanced_tree IF EXISTS;
+DROP SCHEMA IF EXISTS balanced_tree;
 
 CREATE SCHEMA balanced_tree;
 use balanced_tree;
@@ -15186,3 +15186,19 @@ VALUES
   ('e83aa3', '5', '32', '1', 't', '93620b', '2021-03-01 07:11:24.6624'),
   ('d5e9a6', '2', '23', '1', 't', '93620b', '2021-03-01 07:11:24.6624'),
   ('5d267b', '2', '40', '1', 't', '93620b', '2021-03-01 07:11:24.6624');
+
+
+CREATE TABLE sales AS 
+SELECT prod_id, 
+       qty, 
+       price, 
+       discount, 
+       CASE WHEN member='t' THEN TRUE ELSE FALSE END AS member, 
+       txn_id, 
+       start_txn_time 
+FROM _sales_;
+
+DROP TABLE _sales_ ;
+
+ALTER TABLE sales MODIFY member BOOLEAN;
+
