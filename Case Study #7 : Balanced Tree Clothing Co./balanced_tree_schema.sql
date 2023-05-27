@@ -1,3 +1,4 @@
+DROP DATABASE balanced_tree IF EXISTS;
 
 CREATE SCHEMA balanced_tree;
 use balanced_tree;
@@ -78,17 +79,17 @@ VALUES
   ('b9a74d', '17', 'White Striped Socks - Mens', '2', '6', '17', 'Mens', 'Socks', 'White Striped'),
   ('2feb6b', '29', 'Pink Fluro Polkadot Socks - Mens', '2', '6', '18', 'Mens', 'Socks', 'Pink Fluro Polkadot');
 
-CREATE TABLE balanced_tree.sales (
+CREATE TABLE balanced_tree._sales_ (
   prod_id VARCHAR(6),
   qty INTEGER,
   price INTEGER,
   discount INTEGER,
-  member BOOLEAN,
+  member VARCHAR(1),
   txn_id VARCHAR(6),
   start_txn_time TIMESTAMP
 );
 
-INSERT INTO balanced_tree.sales
+INSERT INTO balanced_tree._sales_
 VALUES
   ('c4a632', '4', '13', '17', 't', '54f307', '2021-02-13 01:59:43.296'),
   ('5d267b', '4', '40', '17', 't', '54f307', '2021-02-13 01:59:43.296'),
