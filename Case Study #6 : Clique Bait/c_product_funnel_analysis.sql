@@ -126,7 +126,7 @@ limit 1;
 select product, 
        concat(round(purchases/views*100,2), '%') as `purchase to view percentage` 
 from individual_products_statistics_table 
-order by purchase_to_view_percentage desc 
+order by purchases/views desc
 limit 1;
 
 -- 4. What is the average conversion rate from view to cart add?
