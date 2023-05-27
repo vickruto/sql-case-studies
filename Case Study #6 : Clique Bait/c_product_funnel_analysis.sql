@@ -105,11 +105,21 @@ join abandonments_ using (product_category);
 -- Use your 2 new output tables - answer the following questions:
 -- 1. Which product had the most views, cart adds and purchases?
 
-
+select * 
+from 
+ (select product as `most views` from individual_products_statistics_table order by views desc limit 1) v
+join 
+ (select product as `most cart adds` from individual_products_statistics_table order by cart_adds desc limit 1) c
+join 
+ (select product as `most purchases` from individual_products_statistics_table order by purchases desc limit 1) p ;
 
 -- 2. Which product was most likely to be abandoned?
 
-
+select product `product most likely to be abandoned`, 
+       concat(round(abandonments/cart_adds*100,2), '%') as abandonment_rate  
+from individual_products_statistics_table 
+order by abandonment_rate desc 
+limit 1;
 
 -- 3. Which product had the highest view to purchase percentage?
 
