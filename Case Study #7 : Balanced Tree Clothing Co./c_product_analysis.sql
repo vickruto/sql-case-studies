@@ -79,15 +79,51 @@ where rnk=1 ;
 
 -- 6. What is the percentage split of revenue by product for each segment?
 
-
+with product_revenues as (
+       select product_name, 
+              segment_name, 
+              sum(qty*s.price*(100-discount)/100) as revenue 
+       from sales s 
+       join product_details pd 
+       on pd.product_id=s.prod_id 
+       group by product_name, segment_name
+)
+select product_name as `Product`,
+       segment_name as `Segment`,
+       concat('$', format(revenue,2)) as `Revenue`,
+       concat(round(revenue/sum(revenue) over(partition by segment_name)*100, 2), '%') as `segment percentage split` 
+from product_revenues;
 
 -- 7. What is the percentage split of revenue by segment for each category?
 
-
+with segment_revenues as (
+       select segment_name, 
+              category_name, 
+              sum(qty*s.price*(100-discount)/100) as revenue 
+       from sales s 
+       join product_details pd 
+       on pd.product_id=s.prod_id 
+       group by category_name, segment_name
+)
+select segment_name as `Segment`,
+       category_name as `Category`,
+       concat('$', format(revenue,2)) as `Revenue`,
+       concat(round(revenue/sum(revenue) over(partition by category_name)*100, 2), '%') as `category percentage split` 
+from segment_revenues;
 
 -- 8. What is the percentage split of total revenue by category?
 
+with category_revenues as ( 
+       select category_name, 
+              sum(qty*s.price*(100-discount)/100) as revenue 
+       from sales s 
+       join product_details pd 
+       on pd.product_id=s.prod_id 
+       group by category_name)
 
+select category_name as `Category`, 
+       concat(round(revenue/sum(revenue) over()*100, 2), '%') as `percentage split`
+from category_revenues;
 
 -- 9. What is the total transaction “penetration” for each product? (hint: penetration = number of transactions where at least 1 quantity of a product was purchased divided by total number of transactions)
 
