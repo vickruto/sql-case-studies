@@ -3,7 +3,10 @@
 </div>
 
 <insert design image here>
-
+<p align="center">
+  <img src ='https://8weeksqlchallenge.com/images/case-study-designs/7.png', height="400">
+</p>
+ 
 <div align="center">
  <h2>Introduction</h2>
 </div>
