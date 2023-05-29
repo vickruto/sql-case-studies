@@ -125,12 +125,32 @@ select category_name as `Category`,
        concat(round(revenue/sum(revenue) over()*100, 2), '%') as `percentage split`
 from category_revenues;
 
+
 -- 9. What is the total transaction “penetration” for each product? (hint: penetration = number of transactions where at least 1 quantity of a product was purchased divided by total number of transactions)
 
-
+select product_name, 
+       concat(round(count(distinct txn_id)/(select count(distinct txn_id) from sales)*100,2), '%') as `transaction penetration` 
+from sales s 
+join product_details pd on pd.product_id=s.prod_id 
+group by product_name;
 
 -- 10. What is the most common combination of at least 1 quantity of any 3 products in a single transaction?
 
+with product_ids as (
+	select a.prod_id as prod_1, b.prod_id as prod_2, c.prod_id as prod_3, count(*) as num_combination
+	from sales a 
+	join sales b 
+	   on a.txn_id=b.txn_id and a.prod_id>b.prod_id 
+	join sales c 
+	   on b.txn_id=c.txn_id and b.prod_id>c.prod_id 
+	group by a.prod_id, b.prod_id, c.prod_id
+	order by count(*) desc
+	limit 1)
 
+select * 
+from (select product_name as `product 1` from product_details where product_id in (select prod_1 from product_ids)) x
+join (select product_name as `product 2` from product_details where product_id in (select prod_2 from product_ids)) y
+join (select product_name as `product 3` from product_details where product_id in (select prod_3 from product_ids)) z
+join (select num_combination as `Number of Times Purchased Together` from product_ids) a;
 
 
