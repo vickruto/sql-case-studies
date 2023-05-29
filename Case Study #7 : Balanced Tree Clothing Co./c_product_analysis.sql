@@ -33,7 +33,6 @@ select pd.segment_name as `segment`,
 from product_details pd 
 join sales s on pd.product_id=s.prod_id 
 group by pd.segment_name ;
-limit 4;
 
 
 -- 3. What is the top selling product for each segment?
@@ -59,8 +58,8 @@ select pd.category_name as `Category`,
        concat('$', format(sum(s.qty*s.price*discount/100),2)) as `discount`
 from product_details pd 
 join sales s on pd.product_id=s.prod_id 
-group by pd.category_name
-limit 4;
+group by pd.category_name;
+
 
 -- 5. What is the top selling product for each category?
 
