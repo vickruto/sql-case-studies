@@ -79,7 +79,7 @@ VALUES
   ('b9a74d', '17', 'White Striped Socks - Mens', '2', '6', '17', 'Mens', 'Socks', 'White Striped'),
   ('2feb6b', '29', 'Pink Fluro Polkadot Socks - Mens', '2', '6', '18', 'Mens', 'Socks', 'Pink Fluro Polkadot');
 
-CREATE TABLE balanced_tree._sales_ (
+CREATE TABLE balanced_tree.sales (
   prod_id VARCHAR(6),
   qty INTEGER,
   price INTEGER,
@@ -89,7 +89,7 @@ CREATE TABLE balanced_tree._sales_ (
   start_txn_time TIMESTAMP
 );
 
-INSERT INTO balanced_tree._sales_
+INSERT INTO balanced_tree.sales
 VALUES
   ('c4a632', '4', '13', '17', 't', '54f307', '2021-02-13 01:59:43.296'),
   ('5d267b', '4', '40', '17', 't', '54f307', '2021-02-13 01:59:43.296'),
@@ -15188,17 +15188,9 @@ VALUES
   ('5d267b', '2', '40', '1', 't', '93620b', '2021-03-01 07:11:24.6624');
 
 
-CREATE TABLE sales AS 
-SELECT prod_id, 
-       qty, 
-       price, 
-       discount, 
-       CASE WHEN member='t' THEN TRUE ELSE FALSE END AS member, 
-       txn_id, 
-       start_txn_time 
-FROM _sales_;
+UPDATE TABLE balanced_tree.sales
+SET member = CASE WHEN member='t' THEN TRUE WHEN member='f' THEN FALSE END;
 
-DROP TABLE _sales_ ;
-
-ALTER TABLE sales MODIFY member BOOLEAN;
+ALTER TABLE balanced_tree.sales
+MODIFY COLUMN member BOOLEAN;
 
