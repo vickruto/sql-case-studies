@@ -15188,7 +15188,7 @@ VALUES
   ('5d267b', '2', '40', '1', 't', '93620b', '2021-03-01 07:11:24.6624');
 
 
-UPDATE TABLE balanced_tree.sales
+UPDATE balanced_tree.sales
 SET member = CASE WHEN member='t' THEN TRUE WHEN member='f' THEN FALSE END;
 
 ALTER TABLE balanced_tree.sales
