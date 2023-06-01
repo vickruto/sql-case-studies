@@ -14,9 +14,16 @@ use fresh_segments;
 -- Data Exploration and Cleansing
 -- 1. Update the `fresh_segments.interest_metrics` table by modifying the `month_year` column to be a date data type with the start of the month
 
+alter table interest_metrics modify month_year varchar(10);
+update interest_metrics set month_year = str_to_date(concat('01-', month_year), '%d-%m-%Y');
+alter table interest_metrics modify month_year date;
 
 -- 2. What is count of records in the `fresh_segments.interest_metrics` for each `month_year` value sorted in chronological order (earliest to latest) with the null values appearing first?
 
+select month_year, count(*) as `Number of records` 
+from interest_metrics 
+group by month_year 
+order by month_year;
 
 -- 3. What do you think we should do with these null values in the `fresh_segments.interest_metrics`
 
