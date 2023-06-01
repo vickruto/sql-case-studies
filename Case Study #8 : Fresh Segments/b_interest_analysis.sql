@@ -55,10 +55,10 @@ join (select interest_id,
       count(distinct month_year) as num_months 
       from interest_metrics group by interest_id) as x 
 using (interest_id) 
-where num_months <= 6 ;
+where num_months < 6 ;
 
 /*********************************
- There are 598 records from 143 interests which occur for less than 6 months of the 14 months in the dataset 
+ There are 400 records from 110 interests which occur for less than 6 months of the 14 months in the dataset.  These 400 data points would be removed
 *********************************/
 
 
