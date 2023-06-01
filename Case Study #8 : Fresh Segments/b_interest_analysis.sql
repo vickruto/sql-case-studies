@@ -64,9 +64,18 @@ where num_months < 6 ;
 
 -- 4. Does this decision make sense to remove these data points from a business perspective? Use an example where there are all 14 months present to a removed `interest` example for your arguments - think about what it means to have less months present from a segment perspective.
 
+/*********************************
 
+*********************************/
 
 -- 5. After removing these interests - how many unique interests are there for each month?
 
-
+select month_year, count(distinct interest_id) as `Number of unique interests`
+from interest_metrics im
+join (select interest_id, 
+      count(distinct month_year) as num_months 
+      from interest_metrics group by interest_id) as x 
+using (interest_id) 
+where num_months >= 6 and month_year is not null
+group by month_year;
 
