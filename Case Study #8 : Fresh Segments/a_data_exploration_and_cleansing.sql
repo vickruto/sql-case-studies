@@ -31,11 +31,19 @@ order by month_year;
 
 -- 4. How many `interest_id` values exist in the `fresh_segments.interest_metrics` table but not in the `fresh_segments.interest_map` table? What about the other way around?
 
+select count(interest_id) as "Number of `interest_id` values in `interest_metrics` missing in `interest_map`"
+from (	select distinct interest_id 
+	from interest_metrics 
+	except select id as interest_id from interest_map) dt; 
 
+select count(id) "Number of `id` values in `interest_map` missing in `interest_metrics`"
+from (	select distinct id 
+	from interest_map 
+	except select interest_id as id from interest_metrics) dt; 
 
 -- 5. Summarise the `id` values in the `fresh_segments.interest_map` by its total record count in this table
 
-
+select count(distinct id) as "Number of unique `id` values" from interest_map;
 
 -- 6. What sort of table join should we perform for our analysis and why? Check your logic by checking the rows where `interest_id = 21246` in your joined output and include all columns from `fresh_segments.interest_metrics` and all columns from `fresh_segments.interest_map` except from the `id` column.
 
