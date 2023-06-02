@@ -60,11 +60,38 @@ select * from bottom_10_compositions_table;
 
 -- 2. Which 5 interests had the lowest average ranking value?
 
-
+with filtered_interest_metrics as (
+	select im.*
+	from interest_metrics im
+	join (select interest_id, 
+	      count(distinct month_year) as num_months 
+	      from interest_metrics group by interest_id) as x 
+	using (interest_id) 
+	where num_months >= 6 and month_year is not null)
+	
+select interest_name, round(avg(ranking),2) as avg_ranking
+from filtered_interest_metrics f 
+join interest_map m on m.id = f.interest_id 
+group by interest_name 
+order by avg_ranking
+limit 5;
 
 -- 3. Which 5 interests had the largest standard deviation in their percentile_ranking value?
 
+with filtered_interest_metrics as (
+	select im.*
+	from interest_metrics im
+	join (select interest_id, 
+	      count(distinct month_year) as num_months 
+	      from interest_metrics group by interest_id) as x 
+	using (interest_id) 
+	where num_months >= 6 and month_year is not null)
 
+select distinct interest_id, interest_name , stddev(percentile_ranking) over(partition by interest_id) as std_deviation 
+from filtered_interest_metrics f 
+join interest_map m on m.id = f.interest_id  
+order by std_deviation desc
+limit 5;
 
 -- 4. For the 5 interests found in the previous question - what was minimum and maximum percentile_ranking values for each interest and its corresponding year_month value? Can you describe what is happening for these 5 interests?
 
