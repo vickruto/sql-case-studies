@@ -95,6 +95,38 @@ limit 5;
 
 -- 4. For the 5 interests found in the previous question - what was minimum and maximum percentile_ranking values for each interest and its corresponding year_month value? Can you describe what is happening for these 5 interests?
 
+with filtered_interest_metrics as (
+	select im.*
+	from interest_metrics im
+	join (select interest_id, 
+	      count(distinct month_year) as num_months 
+	      from interest_metrics group by interest_id) as x 
+	using (interest_id) 
+	where num_months >= 6 and month_year is not null),
 
+     min_perc_rnk_table as (
+	select distinct interest_id, interest_name , stddev(percentile_ranking) over(partition by interest_id) as std_deviation 
+	from filtered_interest_metrics f 
+	join interest_map m on m.id = f.interest_id  
+	order by std_deviation desc
+	limit 5),
+
+     min_max_composition as (
+		select interest_id, interest_name, min(composition) as min_composition, max(composition) as max_composition
+		from min_perc_rnk_table 
+		join interest_metrics using (interest_id)
+		group by interest_id, interest_name)
+
+select comp.interest_id, 
+       comp.interest_name, 
+       comp.min_composition, 
+       immin.month_year as `min_composition month_year`, 
+       comp.max_composition, 
+       immax.month_year as `max_composition month_year`
+from min_max_composition comp
+join interest_metrics immin
+ on immin.interest_id = comp.interest_id and immin.composition = comp.min_composition
+join interest_metrics immax
+ on immax.interest_id = comp.interest_id and immax.composition = comp.max_composition;
 
 -- 5. How would you describe our customers in this segment based off their composition and ranking values? What sort of products or services should we show to these customers and what should we avoid?
