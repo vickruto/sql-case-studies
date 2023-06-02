@@ -27,11 +27,11 @@ order by style_id;
 with recursive cte as (
         select id,  
                id as category_id,
-               cast(level_text as nchar(20)) as category_name,
+               cast(level_text as char(20)) as category_name,
                0 as segment_id, 
-               cast(null as nchar(20)) as segment_name,
+               cast(null as char(20)) as segment_name,
                0 as style_id, 
-               cast(null as nchar(20)) as style_name, 
+               cast(null as char(20)) as style_name, 
                1 as lvl
         from product_hierarchy 
         where parent_id is null
