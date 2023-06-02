@@ -28,7 +28,27 @@ limit 10;
 
 -- 2. For all of these top 10 interests - which interest appears the most often?
 
+with top_interests_by_avg_comp as (
+	select interest_id, 
+	       month_year,
+	       interest_name,
+	       index_value,
+	       ranking,
+	       percentile_ranking,
+	       round(composition/index_value,2) as avg_composition 
+	from interest_metrics mt
+	join interest_map mp
+	on mt.interest_id = mp.id
+	order by avg_composition desc 
+	limit 10)
 
+select interest_name as `interest with most occurence in top 10`, 
+       interest_id,
+       count(*) as `Number of occurences`
+from top_interests_by_avg_comp 
+group by interest_name, interest_id
+order by count(*) desc
+limit 1;
 
 -- 3. What is the average of the average composition for the top 10 interests for each month?
 
