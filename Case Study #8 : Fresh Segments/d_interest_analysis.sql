@@ -13,7 +13,18 @@ use fresh_segments;
 
 -- 1. What is the top 10 interests by the average composition for each month?
 
-
+select interest_id, 
+       month_year,
+       interest_name,
+       index_value,
+       ranking,
+       percentile_ranking,
+       round(composition/index_value,2) as avg_composition 
+from interest_metrics mt
+join interest_map mp
+on mt.interest_id = mp.id
+order by avg_composition desc 
+limit 10;
 
 -- 2. For all of these top 10 interests - which interest appears the most often?
 
