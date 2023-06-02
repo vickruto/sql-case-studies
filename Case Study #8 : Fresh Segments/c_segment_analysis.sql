@@ -73,7 +73,7 @@ select interest_name, round(avg(ranking),2) as avg_ranking
 from filtered_interest_metrics f 
 join interest_map m on m.id = f.interest_id 
 group by interest_name 
-order by avg_ranking
+order by avg_ranking desc
 limit 5;
 
 -- 3. Which 5 interests had the largest standard deviation in their percentile_ranking value?
