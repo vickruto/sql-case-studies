@@ -44,7 +44,7 @@ union select * from z;
 -- 4. What is the average discount value per transaction?
 
 select concat('$', format(avg(txn_discount),2)) as `average discount per transaction` 
-from (select avg(qty*price*discount/100) as txn_discount 
+from (select sum(qty*price*discount/100) as txn_discount 
       from sales group by txn_id) as x 
 ;
 
@@ -69,9 +69,9 @@ join z;
 
 select concat('$', format(avg(member_transaction_amt), 2)) as `average net revenue per member transaction`, 
        concat('$', format(avg(non_member_transaction_amt), 2)) as `average net revenue per non-member transaction` 
-from (select avg(qty*price*(100-discount)/100) as member_transaction_amt 
+from (select sum(qty*price*(100-discount)/100) as member_transaction_amt 
       from sales where member=1 group by txn_id) as x 
-join (select avg(qty*price*(100-discount)/100) as non_member_transaction_amt 
+join (select sum(qty*price*(100-discount)/100) as non_member_transaction_amt 
       from sales where member=0 group by txn_id) as y
 ;
 
