@@ -51,5 +51,26 @@ select count(distinct id) as "Number of unique `id` values" from interest_map;
 
 -- 7. Are there any records in your joined table where the `month_year` value is before the `created_at` value from the `fresh_segments.interest_map` table? Do you think these values are valid and why?
 
+-- This is one of the open ended questions that requires "additional thought and not just a coded solution", in Danny's words. To be able to answer the question, here are three useful queries to dig into the data. 
+select count(*) as "Number of records where `month_year` is before `created_at`"
+from interest_map mp 
+join interest_metrics mt 
+on mt.interest_id=mp.id 
+where month_year<created_at;
 
+select count(*) as "Number of records where `month_year` value's month is before `created_at` value's month"
+from interest_map mp 
+join interest_metrics mt 
+on mt.interest_id=mp.id 
+where month_year<created_at
+  and month(month_year)<month(created_at);
 
+select max(dayofmonth(mp.created_at)) as "Maximum day of month value in the `created_at` column where the `month_year` is before the `created_at`"
+from interest_map mp 
+join interest_metrics mt 
+on mt.interest_id=mp.id 
+where month_year<created_at;
+
+/************************************************
+There are 188 records in which the `month_year` value is before the `created_at` value in the dataset. However, all these `month_year` values are in the same month as the `created_at` values. Thus, these records are not invalid since the `month_year` value only represents the first day of any month in which client data was collected. Incredibly, all the `created_at` values in which the data for the same month was recorded were before the 18th day of the month. This makes sense since there were enough days before the end of the month to collect useful quantifiable data.
+************************************************/
