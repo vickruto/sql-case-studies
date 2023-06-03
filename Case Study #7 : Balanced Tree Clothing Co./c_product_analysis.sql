@@ -22,9 +22,11 @@ select pd.product_name,
 from sales s 
 join product_details pd 
 on s.prod_id=pd.product_id 
-group by product_name;
+group by product_name
+order by sum(s.qty*s.price) desc
+limit 3;
 
---- 2. What is the total quantity, revenue and discount for each segment?
+-- 2. What is the total quantity, revenue and discount for each segment?
 
 select pd.segment_name as `segment`, 
        sum(qty) as `total quantity`,
