@@ -104,29 +104,31 @@ with filtered_interest_metrics as (
 	using (interest_id) 
 	where num_months >= 6 and month_year is not null),
 
-     min_perc_rnk_table as (
+     largest_std_dev_table as (
 	select distinct interest_id, interest_name , stddev(percentile_ranking) over(partition by interest_id) as std_deviation 
 	from filtered_interest_metrics f 
 	join interest_map m on m.id = f.interest_id  
 	order by std_deviation desc
 	limit 5),
 
-     min_max_composition as (
-		select interest_id, interest_name, min(composition) as min_composition, max(composition) as max_composition
-		from min_perc_rnk_table 
-		join interest_metrics using (interest_id)
-		group by interest_id, interest_name)
+     min_max_perc_rnk as (
+        select interest_id, interest_name, min(percentile_ranking) as min_perc, max(percentile_ranking) as max_perc
+	from largest_std_dev_table 
+	join interest_metrics using (interest_id)
+	group by interest_id, interest_name)
 
-select comp.interest_id, 
-       comp.interest_name, 
-       comp.min_composition, 
-       immin.month_year as `min_composition month_year`, 
-       comp.max_composition, 
-       immax.month_year as `max_composition month_year`
-from min_max_composition comp
+select perc.interest_id, 
+       perc.interest_name, 
+       concat(perc.min_perc, '   (', immin.month_year, ')') as `min percentile_ranking (month_year)`, 
+       concat(perc.max_perc, '   (', immax.month_year, ')') as `max percentile_ranking (month_year)`
+from min_max_perc_rnk perc
 join interest_metrics immin
- on immin.interest_id = comp.interest_id and immin.composition = comp.min_composition
+ on immin.interest_id = perc.interest_id and immin.percentile_ranking = perc.min_perc
 join interest_metrics immax
- on immax.interest_id = comp.interest_id and immax.composition = comp.max_composition;
+ on immax.interest_id = perc.interest_id and immax.percentile_ranking = perc.max_perc;
+
+/*************************************************************************************************
+
+*************************************************************************************************/
 
 -- 5. How would you describe our customers in this segment based off their composition and ranking values? What sort of products or services should we show to these customers and what should we avoid?
