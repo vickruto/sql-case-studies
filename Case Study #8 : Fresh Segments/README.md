@@ -2,7 +2,9 @@
  <h1>Case Study #8 : Fresh Segments</h1>
 </div>
 
-<insert case study's design image here >
+<p align="center">
+    <img src="https://8weeksqlchallenge.com/images/case-study-designs/8.png" width="400">
+</p>
 
 <div align="center">
  <h2> Introduction </h2>
