@@ -13,7 +13,7 @@ use fresh_segments;
 
 -- 1. What is the top 10 interests by the average composition for each month?
 
-create view avg_comp_table 
+create or replace view avg_comp_table 
 as 
 	select *, 
 	       round(composition/index_value,2) as avg_composition, 

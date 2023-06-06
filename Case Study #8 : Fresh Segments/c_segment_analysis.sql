@@ -12,7 +12,7 @@ use fresh_segments;
 -- Segment Analysis
 -- 1. Using our filtered dataset by removing the interests with less than 6 months worth of data, which are the top 10 and bottom 10 interests which have the largest composition values in any month_year ? Only use the maximum composition value for each interest but you must keep the corresponding month_year
 
-create view filtered_interest_metrics 
+create or replace view filtered_interest_metrics 
 as 
 	select im.*
 	from interest_metrics im
